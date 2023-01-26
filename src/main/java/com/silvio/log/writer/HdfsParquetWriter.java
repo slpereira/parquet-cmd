@@ -1,20 +1,18 @@
 package com.silvio.log.writer;
 
 import com.silvio.log.model.ApacheAccessLog;
+import com.silvio.log.model.HdfsLog;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.io.OutputFile;
-import org.apache.parquet.schema.MessageType;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
 
-public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
+public class HdfsParquetWriter extends BasicParquetWriter<HdfsLog> {
 
     /**
      * Creates a Builder for configuring ParquetWriter with the example object
@@ -39,7 +37,7 @@ public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
     }
 
     /**
-     * Create a new {@link ApacheParquetWriter}.
+     * Create a new {@link HdfsParquetWriter}.
      *
      * @param file The file name to write to.
      * @param writeSupport The schema to write with.
@@ -50,18 +48,18 @@ public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
      * @param conf The Configuration to use.
      * @throws IOException
      */
-    ApacheParquetWriter(Path file, WriteSupport<ApacheAccessLog> writeSupport,
-                         CompressionCodecName compressionCodecName,
-                         int blockSize, int pageSize, boolean enableDictionary,
-                         boolean enableValidation,
-                         ParquetProperties.WriterVersion writerVersion,
-                         Configuration conf)
+    HdfsParquetWriter(Path file, WriteSupport<HdfsLog> writeSupport,
+                      CompressionCodecName compressionCodecName,
+                      int blockSize, int pageSize, boolean enableDictionary,
+                      boolean enableValidation,
+                      ParquetProperties.WriterVersion writerVersion,
+                      Configuration conf)
             throws IOException {
         super(file, writeSupport, compressionCodecName, blockSize, pageSize,
                 enableDictionary, enableValidation, writerVersion, conf);
     }
 
-    public static class Builder extends BasicParquetWriter.Builder<ApacheAccessLog> {
+    public static class Builder extends BasicParquetWriter.Builder<HdfsLog> {
         protected Builder(org.apache.hadoop.fs.Path path) {
             super(path);
         }
@@ -71,8 +69,8 @@ public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
         }
 
         @Override
-        protected WriteSupport<ApacheAccessLog> getWriteSupport(Configuration conf) {
-            return new ApacheParquetWriteSupport(type);
+        protected WriteSupport<HdfsLog> getWriteSupport(Configuration conf) {
+            return new HdfsParquetWriteSupport(type);
         }
 
     }
