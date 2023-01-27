@@ -52,18 +52,18 @@ public class BasicParquetWriter<T> extends ParquetWriter<T> {
             super(path);
         }
 
-        public Builder withType(MessageType type) {
+        public Builder<T> withType(MessageType type) {
             this.type = type;
             return this;
         }
 
-        public Builder withExtraMetaData(Map<String, String> extraMetaData) {
+        public Builder<T> withExtraMetaData(Map<String, String> extraMetaData) {
             this.extraMetaData = extraMetaData;
             return this;
         }
 
         @Override
-        protected Builder self() {
+        protected Builder<T> self() {
             return this;
         }
 

@@ -3,10 +3,12 @@ package com.silvio.log.writer;
 import com.silvio.log.model.ApacheAccessLog;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,9 +20,10 @@ class ApacheParquetWriterTest {
 """;
 
     @Test
-    void parquetApache() throws IOException {
+    void parquetApache(@TempDir Path tempDir) throws IOException {
+
         var writer = ApacheParquetWriter
-                .builder(Path.of(File.createTempFile("test", ".parquet").getAbsolutePath()))
+                .builder(Path.of(tempDir.toString(), UUID.randomUUID().toString(), "test.parquet"))
                 .withCompressionCodec(CompressionCodecName.ZSTD)
                 .withType(ApacheAccessLog.getSchema())
                 .build();
