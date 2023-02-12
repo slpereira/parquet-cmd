@@ -1,6 +1,7 @@
 package com.silvio.log.writer;
 
 import com.silvio.log.model.ApacheAccessLog;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -23,7 +24,7 @@ class ApacheParquetWriterTest {
     void parquetApache(@TempDir Path tempDir) throws IOException {
 
         var writer = ApacheParquetWriter
-                .builder(Path.of(tempDir.toString(), UUID.randomUUID().toString(), "test.parquet"))
+                .builder(new org.apache.hadoop.fs.Path(tempDir.toString(), UUID.randomUUID().toString(), "test.parquet"))
                 .withCompressionCodec(CompressionCodecName.ZSTD)
                 .withType(ApacheAccessLog.getSchema())
                 .build();
@@ -33,5 +34,31 @@ class ApacheParquetWriterTest {
         writer.close();
 
     }
+
+    @Test
+    void parquetApacheS3a(@TempDir Path tempDir) throws IOException {
+        Configuration conf = new Configuration();
+        conf.set("fs.s3a.access.key", "AKIAQEE52AOIJETQ7AUV");
+        conf.set("fs.s3a.secret.key", "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");
+        conf.set("fs.s3a.endpoint", "http://localhost:9000");
+        conf.set("fs.s3a.access.key","root"); // MINIO_ROOT_USER
+        conf.set("fs.s3a.secret.key","password"); // MINIO_ROOT_PASSWORD
+        conf.set("fs.s3a.path.style.access", "true");
+        System.setProperty("com.amazonaws.services.s3.enableV4", "true");
+        //System.setProperty("com.amazonaws.services.s3.endpoint", "http://localhost:4566");
+
+        var writer = ApacheParquetWriter
+                .builder(new org.apache.hadoop.fs.Path("s3a://reader-bucket/test.parquet"))
+                .withConf(conf)
+                .withCompressionCodec(CompressionCodecName.ZSTD)
+                .withType(ApacheAccessLog.getSchema())
+                .build();
+
+        var log = ApacheAccessLog.parse(line);
+        writer.write(log);
+        writer.close();
+
+    }
+
 
 }

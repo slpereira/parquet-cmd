@@ -5,10 +5,10 @@ import com.silvio.log.reader.ApacheFastFileReader;
 import com.silvio.log.reader.HdfsFastFileReader;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
+import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.nio.file.Path;
 
 @QuarkusMain
 public class LogMain implements QuarkusApplication {
@@ -22,7 +22,7 @@ public class LogMain implements QuarkusApplication {
 
     @Override
     public int run(String... args) throws Exception {
-        fastFileReader.processLog(Path.of(args[0]), Path.of(args[1]));
+        fastFileReader.processLog(new Path(args[0]), new Path(args[1]));
 
         return 0;
     }

@@ -4,12 +4,12 @@ import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.reader.ApacheFastFileReader;
 import com.silvio.log.reader.LogFastFileReader;
 import com.silvio.log.writer.ApacheParquetWriter;
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 public abstract class BasicLogProcessor<T> {
     protected final LogFastFileReader<T> logFastFileReader;

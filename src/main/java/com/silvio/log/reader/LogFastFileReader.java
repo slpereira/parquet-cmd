@@ -4,8 +4,8 @@ import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.transformer.ApacheBufferTransform;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.core.buffer.Buffer;
+import org.apache.hadoop.fs.Path;
 
-import java.nio.file.Path;
 import java.util.function.Function;
 
 public abstract class LogFastFileReader<T> {

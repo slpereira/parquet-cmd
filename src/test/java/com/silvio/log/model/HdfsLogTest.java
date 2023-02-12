@@ -1,7 +1,5 @@
 package com.silvio.log.model;
 
-import junit.framework.Assert;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -28,11 +26,11 @@ class HdfsLogTest {
     void parse() {
         var line = lines.lines().findFirst().get();
         var log = HdfsLog.parse(line + "\n");
-        Assert.assertEquals(log.getDate(), "081109");
-        Assert.assertEquals(log.getTime(), "205157");
-        Assert.assertEquals(log.getProcessId(), "752");
-        Assert.assertEquals(log.getLogLevel(), "INFO");
-        Assert.assertEquals(log.getLogSource(), "dfs.DataNode$PacketResponder");
-        Assert.assertEquals(log.getLogMessage(), "Received block blk_9212264480425680329 of size 67108864 from /10.251.123.1");
+        Assertions.assertEquals(log.getDate(), "081109");
+        Assertions.assertEquals(log.getTime(), "205157");
+        Assertions.assertEquals(log.getProcessId(), "752");
+        Assertions.assertEquals(log.getLogLevel(), "INFO");
+        Assertions.assertEquals(log.getLogSource(), "dfs.DataNode$PacketResponder");
+        Assertions.assertEquals(log.getLogMessage(), "Received block blk_9212264480425680329 of size 67108864 from /10.251.123.1");
     }
 }

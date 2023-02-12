@@ -7,9 +7,10 @@ import io.vertx.mutiny.core.buffer.Buffer;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.core.file.AsyncFile;
+import org.apache.hadoop.fs.Path;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.nio.file.Path;
+
 
 /**
  * Read a file using Vert.x

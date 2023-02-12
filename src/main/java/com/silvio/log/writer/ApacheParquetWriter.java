@@ -2,6 +2,7 @@ package com.silvio.log.writer;
 
 import com.silvio.log.model.ApacheAccessLog;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
@@ -10,7 +11,6 @@ import org.apache.parquet.io.OutputFile;
 import org.apache.parquet.schema.MessageType;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +24,7 @@ public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
      * @return a {@link Builder} to create a {@link ParquetWriter}
      */
     public static Builder builder(Path file) {
-        return new Builder(new org.apache.hadoop.fs.Path(file.toAbsolutePath().toString()));
+        return new Builder(file);
     }
 
     /**

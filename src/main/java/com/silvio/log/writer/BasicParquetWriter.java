@@ -2,6 +2,7 @@ package com.silvio.log.writer;
 
 import com.silvio.log.model.ApacheAccessLog;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.parquet.column.ParquetProperties;
 import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
@@ -10,7 +11,6 @@ import org.apache.parquet.io.OutputFile;
 import org.apache.parquet.schema.MessageType;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +35,7 @@ public class BasicParquetWriter<T> extends ParquetWriter<T> {
                        ParquetProperties.WriterVersion writerVersion,
                        Configuration conf)
             throws IOException {
-        super(new org.apache.hadoop.fs.Path(file.toAbsolutePath().toString()), writeSupport, compressionCodecName, blockSize, pageSize,
+        super(file, writeSupport, compressionCodecName, blockSize, pageSize,
                 pageSize, enableDictionary, enableValidation, writerVersion, conf);
     }
 
@@ -44,7 +44,7 @@ public class BasicParquetWriter<T> extends ParquetWriter<T> {
         // TODO: Add extra metadata
         private Map<String, String> extraMetaData = new HashMap<>();
 
-        protected Builder(org.apache.hadoop.fs.Path path) {
+        protected Builder(Path path) {
             super(path);
         }
 
