@@ -3,12 +3,10 @@ package com.silvio.log.transformer;
 import com.silvio.log.model.ApacheAccessLog;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.core.buffer.Buffer;
-import org.reactivestreams.Publisher;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ApacheBufferTransform implements Function<Buffer, Multi<ApacheAccessLog>> {

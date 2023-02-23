@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.apache.parquet.schema.MessageType;
 import org.apache.parquet.schema.PrimitiveType;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**

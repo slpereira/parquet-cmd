@@ -10,7 +10,6 @@ import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 
-@ApplicationScoped
 public class HdfsLogProcessor extends BasicLogProcessor<HdfsLog> {
 
     public HdfsLogProcessor(HdfsFastFileReader hdfsFastFileReader) {

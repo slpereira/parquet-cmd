@@ -1,33 +1,53 @@
 package com.silvio.log.processor;
 
-import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.reader.ApacheFastFileReader;
-import com.silvio.log.reader.FastFileReader;
-import io.smallrye.mutiny.Multi;
+import com.silvio.log.reader.FastFileReaderHadoop;
 import io.smallrye.mutiny.helpers.test.AssertSubscriber;
-import io.vertx.mutiny.core.Vertx;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.s3a.S3AFileSystem;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Duration;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.Executors;
 
 class ApacheLogInfiniteProcessorTest {
 
     @Test
-    void processLogInfinite() throws InterruptedException {
+    void processLogInfinite() throws InterruptedException, URISyntaxException, IOException {
 
-        ApacheFastFileReader apacheFastFileReader = new ApacheFastFileReader(new FastFileReader(Vertx.vertx()));
+        Configuration conf = new Configuration();
+        conf.set("fs.s3a.endpoint", "http://localhost:9000");
+        conf.set("fs.s3a.access.key", "WYgfpf1KJfbFFF3M");
+        conf.set("fs.s3a.secret.key", "YXLtZX8RMz8sltZq9QxxsoB4sxoFX9ga");
+        conf.set("fs.s3a.path.style.access", "true");
+        var fs = new S3AFileSystem();
+        fs.initialize(new URI("s3://logs"), conf);
 
-        var m = apacheFastFileReader.readFile(new Path("/data/logs/access.log"));
-        AssertSubscriber s = AssertSubscriber.create();
+        ApacheFastFileReader apacheFastFileReader = new ApacheFastFileReader(new FastFileReaderHadoop(fs));
+
+        AssertSubscriber s = new AssertSubscriber<>();
+        var m = apacheFastFileReader.readFile(new Path("/access.log"));
+//        var m2 = apacheFastFileReader.readFile(new Path("/data/logs/source/xaa"));
+        var lp = new ApacheLogInfiniteProcessor("s3a://parquet/", conf);
+        m.emitOn(Executors.newSingleThreadExecutor()).subscribe().withSubscriber(lp);
+        //m.subscribe().withSubscriber(lp);
+        //m2.subscribe().withSubscriber(lp);
+//        m2.emitOn(Executors.newSingleThreadExecutor()).subscribe().withSubscriber(lp2);
         m.subscribe().withSubscriber(s);
-        var p = new ApacheLogInfiniteProcessor(m, "/data/logs/test");
-        p.processLog();
-        s.awaitCompletion(Duration.ofSeconds(300));
-
-
+//        m2.subscribe().withSubscriber(s);
+        m.onCompletion().call(() -> {
+            System.out.println("m completed");
+            return null;
+        });
+//        m2.onCompletion().call(() -> {
+//            System.out.println("m2 completed");
+//            return null;
+//        });
+        s.await(Duration.ofMinutes(2));
     }
 
 

@@ -8,11 +8,8 @@ import org.apache.parquet.hadoop.ParquetWriter;
 import org.apache.parquet.hadoop.api.WriteSupport;
 import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.apache.parquet.io.OutputFile;
-import org.apache.parquet.schema.MessageType;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ApacheParquetWriter extends BasicParquetWriter<ApacheAccessLog> {
 

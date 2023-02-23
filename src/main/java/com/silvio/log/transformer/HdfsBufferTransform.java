@@ -1,6 +1,5 @@
 package com.silvio.log.transformer;
 
-import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.model.HdfsLog;
 import io.smallrye.mutiny.Multi;
 import io.vertx.mutiny.core.buffer.Buffer;

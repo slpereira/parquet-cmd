@@ -1,17 +1,7 @@
 package com.silvio.log.writer;
 
-import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.model.HdfsLog;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.parquet.column.ColumnDescriptor;
-import org.apache.parquet.hadoop.api.WriteSupport;
-import org.apache.parquet.io.ParquetEncodingException;
-import org.apache.parquet.io.api.Binary;
-import org.apache.parquet.io.api.RecordConsumer;
 import org.apache.parquet.schema.MessageType;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class HdfsParquetWriteSupport extends BasicParquetWriteSupport<HdfsLog> {
 

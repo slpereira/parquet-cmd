@@ -1,6 +1,5 @@
 package com.silvio.log.writer;
 
-import com.silvio.log.model.HdfsLog;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.parquet.column.ColumnDescriptor;
 import org.apache.parquet.hadoop.api.WriteSupport;

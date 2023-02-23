@@ -10,7 +10,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.parquet.column.statistics.Statistics;
 
-import java.awt.*;
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Paths;

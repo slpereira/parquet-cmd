@@ -105,7 +105,7 @@ public class ApacheAccessLog {
             accessLog.setUserAgent(matcher.group(9));
             return accessLog;
         } else {
-            logger.warn("Cannot parse log line: " + logLine);
+            logger.debug("Cannot parse log line: " + logLine);
             return null;
         }
     }
