@@ -136,6 +136,7 @@ public class ApacheAccessLog {
     //   required binary userAgent (UTF8);
     // }
     public static MessageType getSchema() {
+
         return new MessageType("ApacheAccessLog",
                 new PrimitiveType(Type.Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.BINARY,"ipAddress"),
                 new PrimitiveType(Type.Repetition.REQUIRED, PrimitiveType.PrimitiveTypeName.BINARY, "userId"),

@@ -28,6 +28,7 @@ public abstract class InfiniteLogProcessor<T> implements MultiSubscriber<T> {
             if (this.rows.accumulateAndGet(1, Integer::sum) >= maxRows) {
                 log.info("Closing log: {} lines written to {}", this.rows.get(), this.getCurrentPath());
                 this.writer.get().close();
+                this.onClose();
                 this.writer.set(getWriter(getDestPath()));
                 this.rows.set(0);
             }
@@ -47,6 +48,7 @@ public abstract class InfiniteLogProcessor<T> implements MultiSubscriber<T> {
         try {
             log.info("Completed processing log: {} lines written to {}", this.rows.get(), this.getCurrentPath());
             this.writer.get().close();
+            this.onClose();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,6 +65,8 @@ public abstract class InfiniteLogProcessor<T> implements MultiSubscriber<T> {
         this.rows.set(0);
         subscription.request(Long.MAX_VALUE);
     }
+
+    protected void onClose() { }
 
     protected abstract Path getDestPath();
 

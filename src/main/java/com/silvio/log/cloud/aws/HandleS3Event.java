@@ -22,7 +22,7 @@ public class HandleS3Event implements HandleEvent {
             String bucketName = s3Entity.getBucket().getName();
             String objectKey = s3Entity.getObject().getKey();
             if (s3Entity.getObject().getSizeAsLong() == 0) {
-                log.warn("S3 object is empty in bucket " + bucketName + ": " + objectKey);
+                log.warn("Skipping S3 object is empty in bucket " + bucketName + ": " + objectKey);
                 continue;
             }
             log.info("S3 object created in bucket " + bucketName + ": " + objectKey);

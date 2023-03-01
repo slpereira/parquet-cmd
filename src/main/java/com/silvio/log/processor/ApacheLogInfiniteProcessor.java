@@ -1,5 +1,6 @@
 package com.silvio.log.processor;
 
+import com.silvio.log.cloud.aws.SqsService;
 import com.silvio.log.model.ApacheAccessLog;
 import com.silvio.log.writer.ApacheParquetWriter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,12 @@ public class ApacheLogInfiniteProcessor extends InfiniteLogProcessor<ApacheAcces
 
     private final Configuration conf;
 
-    public ApacheLogInfiniteProcessor(String destPath, Configuration conf) {
+    private final SqsService sqsService;
+
+    public ApacheLogInfiniteProcessor(String destPath, Configuration conf, SqsService sqsService) {
         this.destPath = destPath;
         this.conf = conf;
+        this.sqsService = sqsService;
     }
 
     @Override
@@ -40,6 +44,12 @@ public class ApacheLogInfiniteProcessor extends InfiniteLogProcessor<ApacheAcces
                 .withCompressionCodec(CompressionCodecName.ZSTD)
                 .withType(ApacheAccessLog.getSchema())
                 .build();
+    }
+
+    @Override
+    protected void onClose() {
+        super.onClose();
+        this.sqsService.sendMessage(this.currentPath);
     }
 
     @Override
