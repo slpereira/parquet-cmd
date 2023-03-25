@@ -1,0 +1,24 @@
+CREATE TABLE COLUMN_STATISTICS (
+  FILENAME VARCHAR NOT NULL,
+  COLUMN_NAME VARCHAR NOT NULL,
+  ROW_GROUP INT NOT NULL,
+  NULL_COUNT INT NOT NULL,
+  MIN_LONG BIGINT,
+  MAX_LONG BIGINT,
+  MIN_VAR VARCHAR,
+  MAX_VAR VARCHAR,
+  MIN_DATE TIMESTAMP,
+  MAX_DATE TIMESTAMP,
+  PRIMARY KEY (FILENAME, COLUMN_NAME, ROW_GROUP)
+);
+
+CREATE TABLE block_metadata (
+  id SERIAL PRIMARY KEY,
+  block_offset BIGINT,
+  row_count BIGINT,
+  compressed_size BIGINT,
+  uncompressed_size BIGINT,
+  parquet_file_id VARCHAR NOT NULL
+);
+
+create sequence hibernate_sequence start 1 increment 1;
