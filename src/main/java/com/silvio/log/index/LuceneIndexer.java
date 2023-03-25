@@ -11,6 +11,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.parquet.column.statistics.Statistics;
+import org.apache.parquet.hadoop.metadata.BlockMetaData;
 import org.apache.parquet.hadoop.metadata.ColumnChunkMetaData;
 
 import java.io.Closeable;
@@ -19,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-public class LuceneIndexer implements Closeable {
+public class LuceneIndexer implements Indexer {
     private final Directory directory;
     private final StandardAnalyzer analyzer = new StandardAnalyzer();
     private final IndexWriterConfig config = new IndexWriterConfig(analyzer);
@@ -32,13 +33,19 @@ public class LuceneIndexer implements Closeable {
         this.writer = new IndexWriter(directory, config);
     }
 
-    public void index(List<ColumnChunkMetaData> columns, String fileName) throws IOException {
+    @Override
+    public void start() throws IOException {
+
+    }
+
+    @Override
+    public void index(BlockMetaData blockMetaData, String fileName) throws IOException {
         var document = new Document();
-        for (var column : columns) {
+        for (var column : blockMetaData.getColumns()) {
             var columnName = column.getPath().toDotString();
             var columnStatistics = column.getStatistics();
-            document.add(new TextField(columnName, column.getPrimitiveType().getPrimitiveTypeName().toString(), Field.Store.NO));
-            document.add(new TextField(columnName + ".comparator", columnStatistics.comparator().toString(), Field.Store.NO));
+            document.add(new StringField(columnName, column.getPrimitiveType().getPrimitiveTypeName().toString(), Field.Store.NO));
+            document.add(new StringField(columnName + ".comparator", columnStatistics.comparator().toString(), Field.Store.NO));
             if (columnStatistics.hasNonNullValue()) {
                 switch (column.getPrimitiveType().getPrimitiveTypeName()) {
                     case INT32 -> {
@@ -48,8 +55,8 @@ public class LuceneIndexer implements Closeable {
                         document.add(new LongRange(columnName + ".range", new long[]{(long) columnStatistics.genericGetMin()}, new long[]{(long) columnStatistics.genericGetMax()}));
                     }
                     case BINARY, BOOLEAN, FIXED_LEN_BYTE_ARRAY, INT96 -> {
-                        document.add(new TextField(columnName + ".min", new String(columnStatistics.getMinBytes()), Field.Store.YES));
-                        document.add(new TextField(columnName + ".max", new String(columnStatistics.getMaxBytes()), Field.Store.YES));
+                        document.add(new StringField(columnName + ".min", new String(columnStatistics.getMinBytes()), Field.Store.YES));
+                        document.add(new StringField(columnName + ".max", new String(columnStatistics.getMaxBytes()), Field.Store.YES));
                     }
                     case FLOAT -> {
                         document.add(new FloatRange(columnName + ".range", new float[]{(float) columnStatistics.genericGetMin()}, new float[]{(float) columnStatistics.genericGetMax()}));
@@ -78,6 +85,7 @@ public class LuceneIndexer implements Closeable {
         return fieldType;
     }
 
+    @Override
     public void commit() throws IOException {
         writer.commit();
     }

@@ -1,21 +1,24 @@
 package com.silvio.log.processor;
 
 import com.silvio.log.cloud.aws.SqsService;
-import io.quarkus.runtime.Startup;
-import io.smallrye.common.annotation.Blocking;
 import io.smallrye.mutiny.Multi;
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
+import lombok.Getter;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.Message;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class SqsMessageListenerProcessor {
-    @Inject
-    SqsService sqsService;
+public class SqsMessageListenerIndexerProcessor {
+    @Getter
+    private final SqsService sqsService;
+
+    public SqsMessageListenerIndexerProcessor(SqsClient sqsClient,
+                                              @ConfigProperty(name = "sqs.indexer.receiver") String receiveUrl) {
+        this.sqsService = new SqsService(sqsClient, null, receiveUrl);
+    }
 
     public Multi<Message> listenToMessages() {
 

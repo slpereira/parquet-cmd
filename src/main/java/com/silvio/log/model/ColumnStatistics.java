@@ -1,15 +1,13 @@
 package  com.silvio.log.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "TB_COLUMN_STATISTICS")
-//@IdClass(StatisticsId.class)
-public class Statistics extends PanacheEntityBase implements Serializable {
+@Table(name = "COLUMN_STATISTICS")
+public class ColumnStatistics extends PanacheEntityBase implements Serializable {
 
     public static final long serialVersionUID = 1L;
     @Id
@@ -25,7 +23,7 @@ public class Statistics extends PanacheEntityBase implements Serializable {
     public int rowGroup;
 
     @Column(name = "NULL_COUNT")
-    public int nullCount;
+    public Long nullCount;
 
     @Column(name = "MIN_LONG")
     public Long minLong;

@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class ApacheAccessLog {
     // Apache access log format
     // LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
-    final static String regex = "^([\\d.]+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+-]\\d{4})\\] \"(.+?)\" (\\d{3}) (\\d+) \"([^\"]+)\" \"(.+?)\"";
-
+    final static String regex = //"^([\\d.]+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+-]\\d{4})\\] \"(.+?)\" (\\d{3}) (\\d+) \"([^\"]+)\" \"(.+?)\"";
+                                "^([\\d.:]+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(.+?)\" (\\d{3}) (\\d+|-) \"([^\"]+)\" \"([^\"]+)\"";
     final static Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(ApacheAccessLog.class.getName());
@@ -105,7 +105,7 @@ public class ApacheAccessLog {
             accessLog.setUserAgent(matcher.group(9));
             return accessLog;
         } else {
-            logger.debug("Cannot parse log line: " + logLine);
+            logger.warn("Cannot parse log line: " + logLine);
             return null;
         }
     }

@@ -6,11 +6,13 @@ import com.silvio.log.cloud.HandleEvent;
 import com.silvio.log.cloud.ObjectIdentifier;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Slf4j
+@ApplicationScoped
 public class HandleS3Event implements HandleEvent {
 
     @Override

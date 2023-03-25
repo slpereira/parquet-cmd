@@ -2,11 +2,10 @@ package com.silvio.log.processor;
 
 import com.silvio.log.cloud.aws.SqsService;
 import com.silvio.log.config.S3Config;
-import com.silvio.log.index.LuceneIndexer;
+import com.silvio.log.index.JdbcIndexer;
 import com.silvio.log.index.ParquetIndexer;
 import io.smallrye.mutiny.unchecked.Unchecked;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,19 +15,15 @@ import java.io.IOException;
 @Slf4j
 public class IndexerProcessor {
     @Inject
-    SqsMessageListenerProcessor messageListener;
-
-    @Inject
-    SqsService sqsService;
-
-    @ConfigProperty(name = "lucene.index.path")
-    String luceneIndexPath;
+    SqsMessageListenerIndexerProcessor messageListener;
 
     @Inject
     S3Config s3Config;
 
-    public void onStart() throws IOException {
-        final var indexer = new LuceneIndexer(luceneIndexPath);
+    @Inject
+    JdbcIndexer indexer;
+
+    public void start() {
         final var parquetIndexer = new ParquetIndexer(indexer, s3Config.getConfiguration());
         final var listener = messageListener.listenToMessages();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -49,8 +44,8 @@ public class IndexerProcessor {
         listener.log().onItem().invoke(
                 Unchecked.consumer(m -> parquetIndexer.processFile(m.body()))).subscribe().with(
                 m -> {
+                    messageListener.getSqsService().deleteMessage(m.receiptHandle());
                     log.info("Message processed: " + m.body());
-                    sqsService.deleteMessage(m.receiptHandle());
                 },
                 (throwable) -> log.error("Error processing message: " + throwable.getMessage(), throwable));
     }

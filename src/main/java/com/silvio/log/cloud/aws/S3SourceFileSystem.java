@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 
 @Getter
 @Singleton
-public class S3SourceFileSystem {
+public class S3SourceFileSystem implements com.silvio.log.cloud.SourceFileSystem {
     private final FileSystem fileSystem;
 
     public S3SourceFileSystem(@ConfigProperty(name = "s3.source.bucket")  String path, S3Config config) throws URISyntaxException, IOException {

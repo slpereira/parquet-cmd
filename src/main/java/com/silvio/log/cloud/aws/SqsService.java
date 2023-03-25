@@ -10,16 +10,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
 
-@ApplicationScoped
 public class SqsService {
-    @Inject
-    SqsClient sqsClient;
+    private final SqsClient sqsClient;
 
-    @ConfigProperty(name = "sqs.queue.url")
-    String queueUrl;
+    private final String queueUrl;
 
-    @ConfigProperty(name = "sqs.queue.url.receive")
-    String receiveUrl;
+    private final String receiveUrl;
+
+    public SqsService(SqsClient sqsClient, String queueUrl, String receiveUrl) {
+        this.sqsClient = sqsClient;
+        this.queueUrl = queueUrl;
+        this.receiveUrl = receiveUrl;
+    }
 
     public void sendMessage(String messageBody) {
         SendMessageRequest request = SendMessageRequest.builder()
